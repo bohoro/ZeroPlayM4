@@ -38,3 +38,27 @@ ZeroPlayM4/
 ├── README.md                 # Project overview, setup instructions, usage examples
 └── requirements.txt          # Python dependencies (pip install -r requirements.txt)
 ```
+
+## Setup
+
+This project uses [Conda](https://docs.conda.io/en/latest/miniconda.html) to manage dependencies.
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/your-username/ZeroPlayM4.git # Replace with your repo URL if different
+    cd ZeroPlayM4
+    ```
+
+2.  **Create and activate the Conda environment:**
+    The `environment.yml` file specifies all the necessary dependencies.
+    ```bash
+    conda env create -f environment.yml
+    conda activate zeroplaym4
+    ```
+    This command creates a new Conda environment named `zeroplaym4` and installs PyTorch, Gymnasium (with Atari support), Pygame, and other required packages.
+
+3.  **You're ready to go!** You can now run the scripts within the activated `zeroplaym4` environment. For example, to play Space Invaders interactively:
+    ```bash
+    python games/atari/play_space_invaders.py
+    ```
+
