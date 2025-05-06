@@ -43,19 +43,18 @@ print(f"Launching {game_id} for keyboard play...")
 print("Press ESC to exit.")
 
 try:
-    # Create the environment - render_mode='rgb_array' is often used by play
+    # Create the environment - render_mode='rgb_array' is required by play()
     # play() handles the actual rendering window.
-    env = gym.make(game_id, render_mode="rgb_array")
+    # Set frameskip=1 to ensure every frame is processed and rendered,
+    # making short-lived objects like shots visible.
+    env = gym.make(game_id, render_mode="rgb_array", frameskip=3)
 
     # Start the interactive play session
-    play(env, keys_to_action=key_mapping, fps=30)  # fps controls game speed
+    play(
+        env, keys_to_action=key_mapping, fps=18, zoom=5
+    )  # zoom=5 makes the window 5x larger
 
     env.close()  # Close env though play() might handle it on exit
 
 except Exception as e:
     print(f"\nAn error occurred: {e}")
-    print("Ensure you have the necessary dependencies installed:")
-    print("conda activate zeroplaym4")
-    print(
-        "pip install pygame gymnasium[atari,accept-rom-license]"
-    )  # Or update conda env
