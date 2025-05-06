@@ -1,0 +1,20 @@
+name: zeroplaym4 # Choose a name for your environment
+channels:
+  - pytorch # Recommended channel for PyTorch, especially on macOS
+  - conda-forge # Often has more up-to-date packages
+  - defaults
+dependencies:
+  - python=3.12 # Using 3.12 for potentially broader compatibility
+  - pip # Include pip for packages not on Conda or for specific installs
+  - pytorch # Installs PyTorch (will pick MPS compatible version on M-series)
+  - torchvision # Often used with PyTorch
+  - torchaudio # Often used with PyTorch
+  - pygame    # Install pygame via conda (needed for utils.play)
+  # - numpy # Often a dependency, good to list explicitly
+  # - tqdm # Useful for progress bars
+  # - tensorboard # For logging experiment results
+  - pip:
+    # Use pip specifically for the ROM license helper package if needed
+    # This package helps find/install ROMs automatically after license acceptance.
+    - gymnasium[atari,accept-rom-license]
+    # Add other pip-only packages here if necessary
