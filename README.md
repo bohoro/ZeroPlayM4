@@ -69,3 +69,6 @@ This project uses [Conda](https://docs.conda.io/en/latest/miniconda.html) to man
 * [Arcade Learning Environments](https://ale.farama.org/) 
 * [MuZero: Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model](https://www.youtube.com/watch?v=We20YSAJZSE)
 * [MuZero General](https://github.com/werner-duvaud/muzero-general)
+* [Bayesian-Elo](https://www.remi-coulom.fr/Bayesian-Elo/)
+
+
