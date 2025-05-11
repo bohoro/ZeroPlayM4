@@ -42,27 +42,54 @@ class AtariEnv(Game):
         else:
             self.env.reset()
 
-        # TODO: Determine action space size and observation shape from self.env
+        # Determine action space size and observation shape from self.env
         action_space_size = self.env.action_space.n
         observation_shape = self.env.observation_space.shape
-        super().__init__(action_space_size, observation_shape, **kwargs)
+        # Assuming the base Game class constructor is: __init__(self, action_space_size, observation_shape)
+        # If your core.game.Game class accepts **kwargs, you can add them back.
+        super().__init__(action_space_size, observation_shape)
         print(f"Initialized Atari environment: {game_name}")
         print(f"Action space size: {self.action_space_size}")
         print(f"Observation shape: {self.observation_shape}")
 
     def step(self, action):
-        """Takes a step in the environment."""
-        # TODO: Implement the step logic, returning observation, reward, done, info
-        # observation, reward, terminated, truncated, info = self.env.step(action)
-        # done = terminated or truncated
-        # Need to adapt this to MuZero's expected return format (e.g., managing history)
-        pass
+        """
+        Takes a step in the environment.
+
+        Args:
+            action: The action to take.
+
+        Returns:
+            observation (np.ndarray): The current observation.
+            reward (float): The reward received after taking the action.
+            done (bool): Whether the episode has ended (terminated or truncated).
+            info (dict): Additional information from the environment.
+        """
+        observation, reward, terminated, truncated, info = self.env.step(action)
+        done = terminated or truncated
+        return observation, reward, done, info
 
     def reset(self):
-        """Resets the environment."""
-        # TODO: Implement reset logic
-        # observation, info = self.env.reset()
-        pass
+        """
+        Resets the environment to an initial state.
+
+        Returns:
+            observation (np.ndarray): The initial observation.
+            info (dict): Additional information from the environment.
+        """
+        observation, info = self.env.reset()
+        return observation, info
+
+    def legal_actions(self):
+        """
+        Returns a list of legal actions in the current state.
+        For Atari games, typically all actions are legal.
+        """
+        return list(range(self.action_space_size))
+
+    def to_play(self):
+        """Returns the current player. For single-player games, can be a dummy value like 0."""
+        return 0
 
     def close(self):
         """Closes the environment."""
@@ -72,8 +99,20 @@ class AtariEnv(Game):
         """Renders the environment."""
         return self.env.render()
 
-    # TODO: Add other methods required by your core MuZero implementation
-    # (e.g., legal_actions, get_observation, make_image, store_search_statistics)
+    def get_observation(self):
+        """Returns the current observation (e.g., for the representation network)."""
+        # This might require more sophisticated handling if you're doing frame stacking
+        # or other preprocessing outside this class. For now, assume self.env.render("rgb_array")
+        # or a stored last observation.
+        # For simplicity, let's assume the environment state is implicitly managed and
+        # step/reset provide the necessary observations.
+        # If direct access to the current screen is needed without a step,
+        # you might need to store the last observation.
+        # For now, this method might not be strictly necessary if observations are
+        # passed around correctly from reset/step.
+        raise NotImplementedError(
+            "get_observation needs to be defined based on usage context."
+        )
 
 
 if __name__ == "__main__":
@@ -82,9 +121,13 @@ if __name__ == "__main__":
     try:
         atari_game = AtariEnv(game_name="ALE/Pong-v5")
         print("Environment created successfully.")
-        # atari_game.reset()
-        # atari_game.step(atari_game.env.action_space.sample()) # Take a random action
-        # atari_game.render() # Requires a display setup
+        obs, info = atari_game.reset()
+        print(f"Initial observation shape: {obs.shape}")
+        action = atari_game.env.action_space.sample()  # Take a random action
+        obs, reward, done, info = atari_game.step(action)
+        print(
+            f"Observation shape after step: {obs.shape}, Reward: {reward}, Done: {done}"
+        )
         atari_game.close()
         print("Environment closed.")
     except Exception as e:
