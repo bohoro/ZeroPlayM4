@@ -6,28 +6,83 @@ import numpy as np
 import random
 from collections import deque, namedtuple
 
+"""
+This file implements a Deep Q-Learning (DQN) agent.
+"""
 
-# Define the Q-Network
+# Default Configs
+DQL_CONFIG = {
+    "hidden_size": 128,
+    "learning_rate": 5e-4,
+    "buffer_size": 50000,
+    "batch_size": 128,
+    "gamma": 0.99,
+    "epsilon_start": 0.9,
+    "epsilon_min": 0.05,
+    "epsilon_decay": 0.99,
+    "target_update_freq": 100,  # Number of learning steps
+    "num_episodes": 1550,
+    "max_t": 1000,  # Max steps per episode
+}
+
+
 class QNetwork(nn.Module):
+    """
+    Define the Q-Network the neural network architecture used to approximate the
+    Q-value function. The Q-value Q(s, a) represents the expected future reward
+    for taking action 'a' in state 's'.
+    """
+
     def __init__(self, state_size, action_size, hidden_size=64):
+        """
+        Initialize the Q-Network.
+
+        Args:
+            state_size: The dimensionality of the input state space.
+            action_size: The number of possible actions the agent can take.
+            hidden_size: The number of neurons in each hidden layer.
+        """
         super(QNetwork, self).__init__()
         self.fc1 = nn.Linear(state_size, hidden_size)
         self.fc2 = nn.Linear(hidden_size, hidden_size)
         self.fc3 = nn.Linear(hidden_size, action_size)
 
     def forward(self, state):
+        """
+        Forward pass through the network.
+
+        Args:
+            state: The input state.
+
+        Returns:
+            Q-values for each action.
+        """
         x = F.relu(self.fc1(state))
         x = F.relu(self.fc2(x))
         return self.fc3(x)
 
 
 # Define the Replay Buffer
+"""
+An instance of Transition will store an experience tuple, which consists of:
+    state: The state observed by the agent.
+    action: The action taken by the agent.
+    next_state: The state the agent transitioned to after taking the action.
+    reward: The reward received for taking the action.
+    done: A boolean indicating whether the episode terminated after this transition.
+"""
 Transition = namedtuple(
     "Transition", ("state", "action", "next_state", "reward", "done")
 )
 
 
 class ReplayBuffer:
+    """
+    This class implements the experience replay mechanism, a key component of DQN.
+    Storing experiences and sampling them randomly helps to break correlations
+    between consecutive samples, stabilizing learning.
+    """
+
     def __init__(self, capacity):
         self.memory = deque([], maxlen=capacity)
 
@@ -44,18 +99,25 @@ class ReplayBuffer:
 
 # Define the DQL Agent
 class DQNAgent:
+    """
+    This is the main class that brings everything together to implement the DQN algorithm.
+    """
+
     def __init__(self, state_size, action_size, config):
         self.state_size = state_size
         self.action_size = action_size
         self.config = config  # Hyperparameters
 
         # Device
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 
         # Q-Networks
         self.policy_net = QNetwork(
             state_size, action_size, config.get("hidden_size", 64)
         ).to(self.device)
+
+        # The main reason for the target network is to provide a stable "target"
+        # for the Q-value updates.
         self.target_net = QNetwork(
             state_size, action_size, config.get("hidden_size", 64)
         ).to(self.device)
@@ -99,7 +161,7 @@ class DQNAgent:
                 state_tensor = torch.FloatTensor(state).unsqueeze(0).to(self.device)
                 action_values = self.policy_net(state_tensor)
                 return action_values.max(1)[1].view(1, 1)
-        else:
+        else:  # random action
             return torch.tensor(
                 [[random.randrange(self.action_size)]],
                 device=self.device,
@@ -146,6 +208,7 @@ class DQNAgent:
         # Compute Q(s_t, a) - the model computes Q(s_t), then we select the
         # columns of actions taken. These are the actions which would've been taken
         # for each batch state according to policy_net
+        # TODO - make sure I am clear on what this is doing
         state_action_values = self.policy_net(state_batch).gather(1, action_batch)
 
         # Compute V(s_{t+1}) for all next states.
@@ -189,19 +252,3 @@ class DQNAgent:
         )  # also update target net
         self.policy_net.eval()  # Set to evaluation mode if loading for inference
         self.target_net.eval()
-
-
-# Example Hyperparameters (you'd typically put this in a config file or dict)
-DQL_CONFIG = {
-    "hidden_size": 128,
-    "learning_rate": 5e-4,
-    "buffer_size": 50000,
-    "batch_size": 128,
-    "gamma": 0.99,
-    "epsilon_start": 0.9,
-    "epsilon_min": 0.05,
-    "epsilon_decay": 0.99,
-    "target_update_freq": 100,  # Number of learning steps
-    "num_episodes": 1550,
-    "max_t": 1000,  # Max steps per episode
-}
