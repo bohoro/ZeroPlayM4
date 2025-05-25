@@ -10,7 +10,7 @@ This project aims to build and train an AI agent, based on MuZero principles, th
 ```
 ZeroPlayM4/
 │
-├── core/                     # Core MuZero algorithm logic (game-agnostic)
+├── core/                     # Core algorithm logic (game-agnostic)
 │
 ├── games/                    # Game-specific modules
 │   └── atari/                # atari 

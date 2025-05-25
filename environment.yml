@@ -1,20 +1,16 @@
-name: zeroplaym4 # Choose a name for your environment
+name: lunar_lander_env
 channels:
-  - pytorch # Recommended channel for PyTorch, especially on macOS
-  - conda-forge # Often has more up-to-date packages
+  - conda-forge # For other packages, often has more up-to-date versions
+  - pytorch # For PyTorch
   - defaults
 dependencies:
-  - python=3.12 # Using 3.12 for potentially broader compatibility
-  - pip # Include pip for packages not on Conda or for specific installs
-  - pytorch # Installs PyTorch (will pick MPS compatible version on M-series)
-  - torchvision # Often used with PyTorch
-  - torchaudio # Often used with PyTorch
-  - pygame    # Install pygame via conda (needed for utils.play)
-  # - numpy # Often a dependency, good to list explicitly
-  # - tqdm # Useful for progress bars
-  # - tensorboard # For logging experiment results
-  - pip:
-    # Use pip specifically for the ROM license helper package if needed
-    # This package helps find/install ROMs automatically after license acceptance.
-    - gymnasium[atari,accept-rom-license]
-    # Add other pip-only packages here if necessary
+  - python=3.12 # Or your preferred Python version, e.g., 3.12
+  - pip
+  - gymnasium
+  - pytorch # Installs PyTorch, will pick CPU or CUDA version based on your system
+  - torchvision # Often installed with PyTorch, good to have
+  - torchaudio # Often installed with PyTorch, good to have
+  - numpy
+  - matplotlib
+  - box2d-py # For LunarLander environment
+  - pygame # Dependency for rendering Box2D environments
