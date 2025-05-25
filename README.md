@@ -57,9 +57,9 @@ This project uses [Conda](https://docs.conda.io/en/latest/miniconda.html) to man
     ```
     This command creates a new Conda environment named `zeroplaym4` and installs PyTorch, Gymnasium (with Atari support), Pygame, and other required packages.
 
-3.  **You're ready to go!** You can now run the scripts within the activated `zeroplaym4` environment. For example, to play Space Invaders interactively:
+3.  **You're ready to go!** You can now run the scripts within the activated `zeroplaym4` environment. For example, to see a pretrained lunar lander agent:
     ```bash
-    python games/atari/play_space_invaders.py
+    python scripts/test_lunar_lander_agent.py --model_path results/lunar_lander_final.pth --episodes 10
     ```
 
 

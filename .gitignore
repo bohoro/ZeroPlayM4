@@ -173,3 +173,6 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 .DS_Store
+results/*_checkpoint_episode*.pth
+results/lunar_lander_best_model.pth
+results/all_scores.npy

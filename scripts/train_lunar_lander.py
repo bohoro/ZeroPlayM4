@@ -4,10 +4,16 @@ import numpy as np
 import os
 from collections import deque
 import matplotlib.pyplot as plt
+import sys
 
-# Ensure dql_agent.py is in the same directory or Python path
-# This line assumes train_lunar_lander.py and dql_agent.py are in the same directory.
-from dql_agent import DQNAgent, DQL_CONFIG
+# Add the project root directory to the Python path to allow imports from 'core'
+# Assumes the 'scripts' directory is directly under the project root.
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+# Now import from the 'core' directory
+from core.dql_agent import DQNAgent, DQL_CONFIG
 
 
 def train_lunar_lander():
@@ -17,7 +23,7 @@ def train_lunar_lander():
     """
     # --- 1. Setup ---
     print(f"Using DQL_CONFIG: {DQL_CONFIG}")
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
     print(f"Using device: {device}")
 
     # Create the 'LunarLander-v3' environment

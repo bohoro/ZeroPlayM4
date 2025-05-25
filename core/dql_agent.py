@@ -202,6 +202,6 @@ DQL_CONFIG = {
     "epsilon_min": 0.05,
     "epsilon_decay": 0.99,
     "target_update_freq": 100,  # Number of learning steps
-    "num_episodes": 1000,
+    "num_episodes": 1550,
     "max_t": 1000,  # Max steps per episode
 }
