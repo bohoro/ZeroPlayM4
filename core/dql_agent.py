@@ -109,15 +109,14 @@ class DQNAgent:
         self.config = config  # Hyperparameters
 
         # Device
-        device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+        self.device = torch.device(
+            "mps" if torch.backends.mps.is_available() else "cpu"
+        )
 
         # Q-Networks
         self.policy_net = QNetwork(
             state_size, action_size, config.get("hidden_size", 64)
         ).to(self.device)
-
-        # The main reason for the target network is to provide a stable "target"
-        # for the Q-value updates.
         self.target_net = QNetwork(
             state_size, action_size, config.get("hidden_size", 64)
         ).to(self.device)
