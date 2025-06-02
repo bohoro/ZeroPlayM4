@@ -196,12 +196,12 @@ class Node(object):
 
     def __init__(self, prior: float):
         self.visit_count = 0
-        self.to_play = -1
+        self.to_play: Any = -1
         self.prior = prior
-        self.value_sum = 0
-        self.children = {}
-        self.hidden_state = None
-        self.reward = 0
+        self.value_sum: float = 0
+        self.children: Dict[Any, Any] = {}
+        self.hidden_state: Any = None
+        self.reward: float = 0
 
     def expanded(self) -> bool:
         return len(self.children) > 0
@@ -250,16 +250,16 @@ class Game(object):
 
     def __init__(self, action_space_size: int, discount: float):
         self.environment = Environment()  # Game specific environment.
-        self.history = []
-        self.rewards = []
-        self.child_visits = []
-        self.root_values = []
+        self.history: List[Any] = []
+        self.rewards: List[float] = []
+        self.child_visits: List[Any] = []
+        self.root_values: List[float] = []
         self.action_space_size = action_space_size
         self.discount = discount
 
     def terminal(self) -> bool:
         # Game specific termination rules.
-        pass
+        return False
 
     def legal_actions(self) -> List[Action]:
         # Game specific calculation of legal actions.
@@ -327,7 +327,7 @@ class ReplayBuffer(object):
     def __init__(self, config: MuZeroConfig):
         self.window_size = config.window_size
         self.batch_size = config.batch_size
-        self.buffer = []
+        self.buffer: List[Any] = []
 
     def save_game(self, game):
         if len(self.buffer) > self.window_size:
@@ -615,7 +615,7 @@ def scale_gradient(tensor: Any, scale):
 def update_weights(
     optimizer: tf.train.Optimizer, network: Network, batch, weight_decay: float
 ):
-    loss = 0
+    loss = 0.0
     for image, actions, targets in batch:
         # Initial step, from the real observation.
         network_output = network.initial_inference(image)

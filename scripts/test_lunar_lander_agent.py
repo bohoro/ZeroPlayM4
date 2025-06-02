@@ -66,9 +66,9 @@ def test_lunar_lander(model_path: str, num_episodes: int = 10, render: bool = Tr
     agent.policy_net.eval()
 
     total_rewards = []
-    max_steps_per_episode = DQL_CONFIG.get(
+    max_steps_per_episode = int(DQL_CONFIG.get(
         "max_t", 1000
-    )  # Max steps per episode from config
+    ))  # Max steps per episode from config
 
     # --- 2. Testing Loop ---
     print(f"\nStarting testing for {num_episodes} episodes...")

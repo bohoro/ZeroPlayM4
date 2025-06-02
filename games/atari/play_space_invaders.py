@@ -1,5 +1,6 @@
 # play_space_invaders.py
 from ale_py import ALEInterface
+from typing import Dict, Tuple, Any, Optional
 
 ale = ALEInterface()
 import gymnasium as gym
@@ -25,7 +26,7 @@ game_id = "ALE/SpaceInvaders-v5"
 try:
     import pygame
 
-    key_mapping = {
+    key_mapping: Optional[Dict[Tuple[Any, ...], int]] = {
         (pygame.K_LEFT,): 3,  # Left arrow -> LEFT action
         (pygame.K_RIGHT,): 2,  # Right arrow -> RIGHT action
         (pygame.K_SPACE,): 1,  # Space bar -> FIRE action
